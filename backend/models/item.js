@@ -5,15 +5,37 @@ const itemSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    price: {
+    flavor: {
         type: String,
+        required: true
+    },
+    quantity: {
+        type: Number,
+        required: true
+    },
+    price: {
+        type: Number,
         required: true
     },
     image: {
         type: String,
         required: true
-    }
+    },
+    expiryDate: {
+        type: String,
+        required: true
+    },
+    productDescription: {
+        type: String,
+        required: true
+    },
+
 });
+
+
+
+
+
 
 const ItemModel = mongoose.model("Item", itemSchema);
 module.exports = ItemModel;

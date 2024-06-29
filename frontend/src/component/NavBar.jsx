@@ -13,7 +13,7 @@ const NavBar = () => {
       <div className="max-w-screen-xl flex items-center justify-between mx-auto p-4">
         <div className="flex items-center space-x-3">
           <span className="self-center text-2xl font-semibold whitespace-nowrap">
-            <Link to="/" className="text-black hover:text-green-600">
+            <Link to="#" className="text-black hover:text-green-600">
               Vino IceCream
             </Link>
           </span>
@@ -55,14 +55,14 @@ const NavBar = () => {
               </Link>
             </li>
             <li>
-              <Link to="/AboutUs" className="text-black hover:text-green-600">
+              <Link to="#" className="text-black hover:text-green-600">
                 About Us
               </Link>
             </li>
             <li>
               <Link
-                to="/ContactUs"
-                className="text-black hover:text-green-600 "
+                to="#"
+                className="text-black hover:text-green-600"
               >
                 Contact Us
               </Link>
@@ -70,10 +70,16 @@ const NavBar = () => {
           </ul>
         </div>
         <div className="hidden md:flex items-center space-x-4">
-          <Link to="/SignUpPage" className="text-black hover:text-green-600">
+          <Link 
+            to="/SignUpPage" 
+            className="text-white bg-green-600 px-4 py-2 rounded-md hover:bg-green-700 transition duration-300 ease-in-out"
+          >
             Sign Up
           </Link>
-          <Link to="/LoginPage" className="text-black hover:text-green-600 ">
+          <Link 
+            to="/LoginPage" 
+            className="text-white bg-green-600 px-4 py-2 rounded-md hover:bg-green-700 transition duration-300 ease-in-out"
+          >
             Sign In
           </Link>
         </div>

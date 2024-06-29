@@ -1,5 +1,6 @@
 const { response } = require("express");
 const Item = require("../models/item");
+const CartItem = require("../models/cartItem");
 
 const addItem = async (req, res) => {
   try {
@@ -69,4 +70,33 @@ const getmenuItem = async (req, res) => {
   }
 };
 
-module.exports = { addItem, deleteItem, updateItem ,getmenuItem };
+const test = () =>
+{
+  consloe.log("Testing2")
+}
+
+
+const availableQuantity =  async (req, res) => {
+  try {
+    const { itemId } = req.params;
+
+    const item = await Item.findById(itemId);
+    if (!item) {
+      return res.status(404).json({ message: 'Item not found' });
+    }
+
+    const cartItems = await CartItem.find({ itemId });
+    let totalInCart = 0;
+    cartItems.forEach(cartItem => {
+      totalInCart += cartItem.quantity;
+    });
+
+    const availableQuantity = item.quantity - totalInCart;
+
+    res.json({ quantity: availableQuantity });
+  } catch (error) {
+    console.error("Error getting available quantity:", error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+}
+module.exports = { addItem, deleteItem, updateItem ,getmenuItem,test,availableQuantity};

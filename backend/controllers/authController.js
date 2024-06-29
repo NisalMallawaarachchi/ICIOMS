@@ -2,7 +2,7 @@
 const jwt = require("jsonwebtoken");
 const { response } = require("express");
 const User = require("../models/user");
-require('dotenv').config();
+require("dotenv").config();
 const { hashPassword, comparePassword } = require("../helpers/auth");
 const secretKey = process.env.SECRET_KEY;
 
@@ -46,6 +46,38 @@ const registerUser = async (req, res) => {
   }
 };
 
+/*const LoginUser = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.json({
+        error: "User Not found",
+      });
+    }
+
+    const match = await comparePassword(password, user.password);
+    if (match) {
+      // Store user information in session
+      req.session.user = {
+        email: user.email,
+        id: user._id,
+        name: user.name,
+        role:user.role,
+      };
+      res.json(user);
+    } else {
+      return res.json({
+        error: "Password not Matched",
+      });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+*/
+
 const LoginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -59,15 +91,14 @@ const LoginUser = async (req, res) => {
 
     const match = await comparePassword(password, user.password);
     if (match) {
-      jwt.sign(
-        { email: user.email, id: user._id, name: user.name },
-        secretKey,
-        {},
-        (err, token) => {
-          if (err) throw err;
-          res.cookie("token", token).json(user);
-        }
-      );
+      // Store user information in session
+      req.session.user = {
+        email: user.email,
+        id: user._id,
+        name: user.name,
+        role:user.role,
+      };
+      res.json(user);
     } else {
       return res.json({
         error: "Password not Matched",
@@ -79,21 +110,24 @@ const LoginUser = async (req, res) => {
 };
 
 const getProfile = (req, res) => {
-  const { token } = req.cookies;
-  if (token) {
-    jwt.verify(token, secretKey, {}, (err, user) => {
-      if (err) throw err;
-      res.json(user);
-    });
+  if (req.session && req.session.user) {
+    res.json(req.session.user);
   } else {
     res.json(null);
   }
 };
 
+
 const logout = (req, res) => {
-  
-  res.clearCookie("token");
-  res.json({ message: "Logout successful" });
+  req.session.destroy(err => {
+    if (err) {
+      console.error("Error destroying session:", err);
+      res.status(500).json({ error: "Logout failed" });
+    } else {
+      res.clearCookie("connect.sid"); 
+      res.json({ success: true, message: "Logout successful" });
+    }
+  });
 };
 
 module.exports = {
@@ -101,5 +135,5 @@ module.exports = {
   registerUser,
   LoginUser,
   getProfile,
-  logout
+  logout,
 };
