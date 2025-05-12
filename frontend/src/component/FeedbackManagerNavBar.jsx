@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { FaUser } from "react-icons/fa"; 
+import { FaUser } from "react-icons/fa";
 
-const PaymentManagerNavBar = () => {
+const FeedbackManagerNavBar = () => {
   const Navigate = useNavigate();
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
@@ -32,18 +32,13 @@ const PaymentManagerNavBar = () => {
         <div className="hidden md:flex-1 md:flex md:items-center md:justify-center">
           <ul className="font-medium flex space-x-8">
             <li>
-              <Link to="/ManagePayment" className="text-black hover:text-green-600">
-                Manage Payment
+              <Link to="/ViewFeedback" className="text-black hover:text-green-600">
+                View Feedback
               </Link>
             </li>
             <li>
-              <Link to="/GeneratePaymentReport" className="text-black hover:text-green-600">
-              Generate Report
-              </Link>
-            </li>
-            <li>
-              <Link to="/CreatePromoCode" className="text-black hover:text-green-600">
-                Manage Promotions
+              <Link to="/ManageFeedback" className="text-black hover:text-green-600">
+                Manage Feedback
               </Link>
             </li>
           </ul>
@@ -74,4 +69,4 @@ const PaymentManagerNavBar = () => {
   );
 };
 
-export default PaymentManagerNavBar;
+export default FeedbackManagerNavBar;

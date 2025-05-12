@@ -3,11 +3,12 @@ import axios from "axios";
 import { Toaster } from "react-hot-toast";
 import NavBar from "./NavBar";
 import UserNavBar from "./UserNavBar";
-import SalesPersonManagerNavBar from "./SalesPersonManagerNavBar"
+import SalesPersonManagerNavBar from "./SalesPersonManagerNavBar";
 import PaymentManagerNavBar from "./PaymentManagerNavBar";
 import SalesPersonNavBar from "./SalesPersonNavBar";
 import QMNavBar from "./QMNavBar";
 import UserManagerNavBar from "./UserManagerNavBar";
+import SupplierManager from "./SupplierNavBar/SupplierNavBar";
 
 const DynamicNavBar = () => {
   const [user, setUser] = useState(null);
@@ -28,29 +29,30 @@ const DynamicNavBar = () => {
   }, []);
 
   if (isLoading) {
-    return <div>Loading...</div>; 
+    return <div>Loading...</div>;
   }
 
   if (user) {
     if (user.role === "admin") {
       return <NavBar />;
     } else if (user.role === "salesperson") {
-      return <SalesPersonNavBar />; 
+      return <SalesPersonNavBar />;
     } else if (user.role === "salesperson_manager") {
-      return <SalesPersonManagerNavBar />; 
-    }else if (user.role === "PaymentManager") {
-      return <PaymentManagerNavBar />; 
-    }else if (user.role === "UserManager") {
-      return <UserManagerNavBar />; 
-      
-    } else if (user.name === "Christy") {
+      return <SalesPersonManagerNavBar />;
+    } else if (user.role === "PaymentManager") {
+      return <PaymentManagerNavBar />;
+    } else if (user.role === "UserManager") {
+      return <UserManagerNavBar />;
+    } else if (user.role === "QualityManager") {
       return <QMNavBar />;
-    }else {
-      return <UserNavBar />; 
+    } else if (user.role === "SupplierManager") {
+      return <UserNavBar />;
+    } else {
+      return <UserNavBar />;
     }
   } else {
-    return <NavBar />; 
+    return <NavBar />;
   }
 };
 
-export default DynamicNavBar ;
+export default DynamicNavBar;

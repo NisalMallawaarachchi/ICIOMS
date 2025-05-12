@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from "uuid";
 import "react-toastify/dist/ReactToastify.css";
 import CartItem from "../component/CartItem";
 import CreditCardForm from "../component/CreditCardForm";
+import PayonDelivery from "../component/PayonDelivery";
 
 const CartPages = () => {
   const [cartItems, setCartItems] = useState([]);
@@ -15,6 +16,10 @@ const CartPages = () => {
   const [showCreditCardForm, setShowCreditCardForm] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState("Select Option");
+  const [promoCode, setPromoCode] = useState('');
+  const [discount, setDiscount] = useState(0);
+  const [showPayonDelivery, setShowPayonDelivery] = useState(false);
 
   useEffect(() => {
     fetchCartItems();
@@ -128,7 +133,12 @@ const CartPages = () => {
     cartItems.forEach((cartItem) => {
       total += cartItem.quantity * cartItem.itemId.price;
     });
-    return total.toFixed(2);
+  
+    // Calculate the discounted total
+    const discountedTotal = total - (total * discount) / 100;
+  
+    // Return the discounted total rounded to 2 decimal places
+    return discountedTotal.toFixed(2);
   };
 
   // handlepayment function
@@ -137,7 +147,15 @@ const CartPages = () => {
     if (!validateForm()) {
       return;
     }
+    const selectedPaymentMethod = document.getElementById("paymentMethod").value;
+
+    if (selectedPaymentMethod === "Card") {
     setShowCreditCardForm(true);
+
+    }else if (selectedPaymentMethod === "Cash"){
+    setShowPayonDelivery(true);
+    console.log("Pay On Delivery selected");
+    }
   };
 
   const validateForm = () => {
@@ -172,6 +190,7 @@ const CartPages = () => {
         postalCode,
         city,
         streetAddress,
+        paymentMethod,
         items: cartItems.map((item) => ({
           itemId: item.itemId._id,
           name: item.itemId.name,
@@ -189,52 +208,60 @@ const CartPages = () => {
         // Generate a payment ID
         const paymentId = uuidv4();
 
-        console.log(response);
+        console.log(response)
 
         // Save payment details in payment table
         const paymentDetails = {
           paymentId,
           userId: user._id,
-          orderId: response.data.orderId,
+          orderId: response.data.orderId, 
           status: "completed",
-          Method: "Card",
+          Method : paymentMethod,
           amount: calculateOverallTotal(),
         };
 
-        const paymentResponse = await axios.post(
-          "/payments/create",
-          paymentDetails
-        );
+        const paymentResponse = await axios.post("/payments/create", paymentDetails);
 
         if (paymentResponse.status === 201) {
           clearCart();
-          toast.success(
-            "Order created successfully and payment details saved!",
-            { position: "top-right" }
-          );
+          toast.success("Order created successfully and payment details saved!", { position: "top-right" });
         } else {
           console.error("Failed to save payment details");
-          toast.error("Failed to save payment details. Please try again.", {
-            position: "top-right",
-          });
+          toast.error("Failed to save payment details. Please try again.", { position: "top-right" });
         }
       } else {
         console.error("Failed to create order");
-        toast.error("Failed to create order. Please try again.", {
-          position: "top-right",
-        });
+        toast.error("Failed to create order. Please try again.", { position: "top-right" });
       }
     } catch (error) {
       console.error("Error creating order:", error);
-      toast.error("Error creating order. Please try again.", {
-        position: "top-right",
-      });
+      toast.error("Error creating order. Please try again.", { position: "top-right" });
+    }
+  };
+
+  //Promocode Entering
+  const handleApplyPromoCode = async () => {
+    try {
+      const response = await axios.post("/api/validate-promo-code", { promoCode });
+      if (response.data.success) {
+        setDiscount(response.data.discount);
+        toast.success("Promocode applied successfully!", {position: "top-right"});
+      } else {
+        setDiscount(0);
+        setPromoCode('');
+        toast.error("Invalid promo code. Promo code cleared.", { position: "top-right" });       
+      }
+    } catch (error) {
+      setPromoCode('');
+      console.error("Failed to apply promo code:", error);
+      toast.error("Failed to apply promo code. Please try again.", { position: "top-right" });
     }
   };
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
       <ToastContainer />
+      {showPayonDelivery && <PayonDelivery onClose={() => setShowPayonDelivery(false)} createOrder={createOrder} />}
       {showCreditCardForm && (
         <CreditCardForm
           onClose={() => setShowCreditCardForm(false)}
@@ -302,6 +329,17 @@ const CartPages = () => {
                 removeItem={removeItem}
               />
             ))}
+            <div>
+              <input
+                type="text"
+                value={promoCode}
+                onChange={(e) => setPromoCode(e.target.value)}
+                placeholder="Enter promo code"
+              />
+              <button onClick={handleApplyPromoCode} className="px-4 py-1 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:bg-green-700 text-small">
+                Apply</button>
+                {discount > 0 && <p>Discount applied: {discount}%</p>}
+            </div>
 
             <div className="mt-8 border-t pt-6">
               <h3 className="text-xl font-semibold mb-4">Checkout</h3>
@@ -394,6 +432,25 @@ const CartPages = () => {
                   placeholder="Street Address"
                   required
                 />
+              </div>
+              <div className="mb-4">
+                <label
+                  htmlFor="paymentMethod"
+                  className="block text-gray-700 text-sm font-bold mb-2"
+                >
+                  Payment Method
+                </label>
+                <select
+                  id="paymentMethod"
+                  value={paymentMethod}
+                  onChange={(e) => setPaymentMethod(e.target.value)}
+                  className="input"
+                  required
+                >
+                  <option value="Select Option" className="text-gray-400" >Select Option</option>
+                  <option value="Card">Card Payment</option>
+                  <option value="Cash">Cash on Delivery</option>
+                </select>
               </div>
             </div>
             <div className="flex justify-end mt-4 space-x-4">

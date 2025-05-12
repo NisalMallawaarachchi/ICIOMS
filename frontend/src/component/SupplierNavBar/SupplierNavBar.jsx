@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
-const NavBar = () => {
+const SupplierNavBar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleMenu = () => {
@@ -9,15 +9,8 @@ const NavBar = () => {
   };
 
   return (
-    <nav className="bg-white bg-opacity-70 backdrop-blur-lg shadow-lg rounded-lg">
+    <nav className="bg-white bg-opacity-70 backdrop-blur-lg shadow-lg rounded-lg mb-10">
       <div className="max-w-screen-xl flex items-center justify-between mx-auto p-4">
-        <div className="flex items-center space-x-3">
-          <span className="self-center text-2xl font-semibold whitespace-nowrap">
-            <Link to="#" className="text-black hover:text-green-600">
-              Vino IceCream
-            </Link>
-          </span>
-        </div>
         <div className="md:hidden">
           <button
             onClick={toggleMenu}
@@ -50,39 +43,42 @@ const NavBar = () => {
         <div className={`md:flex ${isOpen ? "block" : "hidden"}`}>
           <ul className="font-medium flex flex-col md:flex-row md:space-x-8 md:space-y-0 mt-4 md:mt-0">
             <li>
-              <Link to="/OurMenu" className="text-black hover:text-green-600">
-                Our Menu
+              <Link
+                to="/list-suplier"
+                className="text-black hover:text-green-600"
+              >
+                Supplier
               </Link>
             </li>
             <li>
-              <Link to="/AboutUS" className="text-black hover:text-green-600">
-                About Us
+              <Link
+                to="/place-order"
+                className="text-black hover:text-green-600"
+              >
+                Place Order
               </Link>
             </li>
             <li>
-              <Link to="/AboutUS" className="text-black hover:text-green-600">
-                Contact Us
+              <Link
+                to="/order-history"
+                className="text-black hover:text-green-600 "
+              >
+                Order History
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/ongoing-order"
+                className="text-black hover:text-green-600 "
+              >
+                Ongoing Order
               </Link>
             </li>
           </ul>
-        </div>
-        <div className="hidden md:flex items-center space-x-4">
-          <Link
-            to="/SignUpPage"
-            className="text-white bg-green-600 px-4 py-2 rounded-md hover:bg-green-700 transition duration-300 ease-in-out"
-          >
-            Sign Up
-          </Link>
-          <Link
-            to="/LoginPage"
-            className="text-white bg-green-600 px-4 py-2 rounded-md hover:bg-green-700 transition duration-300 ease-in-out"
-          >
-            Sign In
-          </Link>
         </div>
       </div>
     </nav>
   );
 };
 
-export default NavBar;
+export default SupplierNavBar;

@@ -13,7 +13,12 @@ const OrderOnline = () => {
   const [userOrderHistory, setUserOrderHistory] = useState([]);
   const [allowedLocation, setAllowedLocation] = useState(false);
 
+ 
+
+
+
   useEffect(() => {
+   
     fetchMenuItems();
     const user = JSON.parse(sessionStorage.getItem("user"));
     if (user && user._id) {
@@ -30,6 +35,7 @@ const OrderOnline = () => {
     }
   }, [userId]);
 
+  //Personalized Recommendation
   useEffect(() => {
     const itemFrequency = {};
     userOrderHistory.forEach((order) => {
@@ -162,18 +168,18 @@ const OrderOnline = () => {
       console.error("Error removing item from the database:", error);
     }
   };
-
+//for location-specific access. 
   const checkLocation = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((position) => {
         const userLatitude = position.coords.latitude;
         const userLongitude = position.coords.longitude;
 
-        const mataleDistrictLatitude = 7.46666;
-        const mataleDistrictLongitude = 80.61666;
+        //const mataleDistrictLatitude = 7.46666;
+        //const mataleDistrictLongitude = 80.61666;
 
-        //const mataleDistrictLatitude = 6.9270;
-        //const mataleDistrictLongitude = 79.8617;
+        const mataleDistrictLatitude = 6.9270;
+        const mataleDistrictLongitude = 79.8617;
 
         const latitudeTolerance = 0.1;
         const longitudeTolerance = 0.1;

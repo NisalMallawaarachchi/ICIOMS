@@ -38,6 +38,16 @@ import AddProductPage from "./pages/AddProductPage"
 import AllProductsPage from "./pages/AllProductPage"
 import ManageProductPage from "./pages/ManageProductPage"
 import  EditProductPage from "./pages/EditProductPage"
+import CreatePromoCode from "./component/CreatePromoCode";
+
+// isira
+import SuplierList from "./pages/Supplier-pages/SuplierList";
+import AddSupplier from "./pages/Supplier-pages/AddSupplier";
+import UpdateSupplier from "./pages/Supplier-pages/UpdateSupplier";
+import PlaceOrder from "./pages/Supplier-pages/PlaceOrder";
+import ConformOrder from "./pages/Supplier-pages/ConformOrder";
+import OngoingOrder from "./pages/Supplier-pages/OngoingOrder";
+import SupOrderHistory from "./pages/Supplier-pages/SupOrderHistory";
 
 axios.defaults.baseURL = "http://localhost:8000";
 axios.defaults.withCredentials = true;
@@ -73,6 +83,8 @@ const App = () => {
           <Route path="/PaymentList" element={<PaymentList />} />\
           <Route path="/ManagePayment" element={<ManagePayment />} />
           <Route path="/GeneratePaymentReport" element={<GeneratePaymentReport/>} />
+          <Route path="/CreatePromoCode" element={<CreatePromoCode/>} />
+
           <Route path="/Adduser" element={<Adduser/>} />
           <Route path="/Admindash" element={<Admindash/>} />
           <Route path="/ManageProfile" element={<ManageProfile/>} />
@@ -88,6 +100,16 @@ const App = () => {
           <Route path="/AllProductsPage" element={<AllProductsPage />} />
           <Route path="/ManageProductPage" element={<ManageProductPage />} />
           <Route path="/update-item/:productId" component={EditProductPage} />
+
+           {/* Isira */}
+           <Route path="/list-suplier" element={<SuplierList/>}/>
+          <Route path="/add-supplier" element={<AddSupplier/>}/>
+          <Route path="/update-supplier/:supplierid" element={<UpdateSupplier/>}/>
+
+          <Route path="/place-order" element={<PlaceOrder/>}/>
+          <Route path="/choose-place-order/:supplierid" element={<ConformOrder/>}/>
+          <Route path="/ongoing-order" element={<OngoingOrder/>}/>
+          <Route path="/order-history" element={<SupOrderHistory/>}/>
 
 
         </Routes>
